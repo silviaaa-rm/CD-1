@@ -1,3 +1,6 @@
+<!-- =========================
+FILE: index.html
+========================= -->
 <!doctype html>
 <html lang="es">
 <head>
@@ -6,21 +9,19 @@
   <title>Hospital — Login</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="home">
 
+<body class="home">
   <header class="top">
     <div class="brand">
-      <div class="logo">H</div>
-      <div>
-        <h1>Hospital Nova Vida</h1>
-        <p>Atención humana + tecnología responsable (demo académica)</p>
+      <!-- LOGO (4cm alto x 10cm largo aprox) -->
+      <img class="hospital-logo" src="https://www.laconcepcion.com.mx/assets/images/logo-color132.png" alt="Logotipo del hospital" />
+      <div class="brand-text">
       </div>
     </div>
 
     <div class="cta">
-      <div class="pill">Urgencias 24/7</div>
-      <div class="pill">Laboratorio</div>
-      <div class="pill">Especialidades</div>
+      <div class="pill"> Rayos X</div>
+      <div class="pill">Neumología</div>
     </div>
   </header>
 
@@ -28,34 +29,32 @@
     <section class="gallery-card">
       <h2>Instalaciones</h2>
       <p class="muted">
-        Conoce nuestras áreas: recepción, consultorios, laboratorio y urgencias.
+        Conoce nuestras áreas:
       </p>
 
       <div class="grid">
-        <!-- Puedes cambiar estas imágenes por las tuyas -->
         <figure class="tile">
-          <img src="https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=1200&q=70" alt="Hospital 1">
-          <figcaption>Recepción</figcaption>
+          <img src="https://playersoflife.com/wp-content/uploads/2024/10/Cover-3-3.jpg" alt="Hospital 1">
         </figure>
         <figure class="tile">
-          <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1200&q=70" alt="Hospital 2">
-          <figcaption>Consultorios</figcaption>
+          <img src="https://playersoflife.com/wp-content/uploads/2024/10/Interiores01-3-2.jpg" alt="Hospital 2">
+          <figcaption>Equipo</figcaption>
         </figure>
         <figure class="tile">
-          <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=70" alt="Hospital 3">
+          <img src="https://playersoflife.com/wp-content/uploads/2024/10/Interiores05-1-2.jpg" alt="Hospital 3">
           <figcaption>Urgencias</figcaption>
         </figure>
         <figure class="tile">
-          <img src="https://images.unsplash.com/photo-1583911860205-72f8ac8ddcbe?auto=format&fit=crop&w=1200&q=70" alt="Hospital 4">
-          <figcaption>Laboratorio</figcaption>
+          <img src="https://playersoflife.com/wp-content/uploads/2024/10/Interiores02-4-3.jpg" alt="Hospital 4">
+          <figcaption>Medicina Nuclear</figcaption>
         </figure>
         <figure class="tile">
-          <img src="https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&w=1200&q=70" alt="Hospital 5">
-          <figcaption>Imagenología</figcaption>
+          <img src="https://playersoflife.com/wp-content/uploads/2024/10/Interiores03-3-1.jpg" alt="Hospital 5">
+          <figcaption>Quirófano</figcaption>
         </figure>
         <figure class="tile">
-          <img src="https://images.unsplash.com/photo-1629904853893-c2c8981a1dc5?auto=format&fit=crop&w=1200&q=70" alt="Hospital 6">
-          <figcaption>Área de espera</figcaption>
+          <img src="https://playersoflife.com/wp-content/uploads/2024/10/Interiores04-3-2.jpg" alt="Hospital 6">
+          <figcaption>Habitaciones</figcaption>
         </figure>
       </div>
     </section>
@@ -64,13 +63,13 @@
     <aside class="login-card" aria-label="Acceso doctores">
       <h3>Acceso para doctores</h3>
       <p class="muted small" style="margin-top:-6px;">
-        Ingresa con tu cuenta para usar el sistema de triage asistido.
+        Ingresa con tu cuenta
       </p>
 
       <form id="loginForm" class="form">
         <label>
           Usuario
-          <input id="user" autocomplete="username" placeholder="dr.garcia" required />
+          <input id="user" autocomplete="username" placeholder="Usuario" required />
         </label>
 
         <label>
@@ -81,24 +80,17 @@
         <button type="submit">Ingresar</button>
 
         <p id="loginMsg" class="msg" aria-live="polite"></p>
-
-        <details class="demo">
-          <summary>Ver usuarios de demo</summary>
-          <ul>
-            <li><b>dr.garcia</b> / 1234</li>
-            <li><b>dr.lopez</b> / 1234</li>
-            <li><b>dra.santos</b> / 1234</li>
-          </ul>
-        </details>
       </form>
     </aside>
   </main>
 
   <footer class="footer">
-    <span>© 2026 Hospital Nova Vida</span>
+    <span>© 2026 Hospital</span>
     <span class="muted">Proyecto escolar — No sustituye diagnóstico médico</span>
   </footer>
 
   <script src="app.js"></script>
 </body>
 </html>
+
+

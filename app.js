@@ -1,8 +1,7 @@
 // 3 usuarios hardcodeados (sin BD)
 const USERS = [
-  { username: "dr.garcia",  password: "1234", name: "Dr. García" },
-  { username: "dr.lopez",   password: "1234", name: "Dr. López" },
-  { username: "dra.santos", password: "1234", name: "Dra. Santos" },
+  { username: "silvia-rm",  password: "1234", name: "Dra. Silvia Guadalupe Ramos Mendoza" },
+  { username: "mar_rm",   password: "1234", name: "Dra. Maryan Ramos Mendoza" },
 ];
 
 const form = document.getElementById("loginForm");

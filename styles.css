@@ -1,104 +1,124 @@
+/* =========================
+FILE: styles.css
+========================= */
 * { box-sizing: border-box; }
 html, body { height: 100%; }
-body {
-  margin: 0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+body { margin: 0; }
+
+/* Tipografía normal / clínica */
+body{
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
 }
 
-/* Fondo verde-azulado */
-.home {
-  color: #e9fffb;
+/* Fondo celeste claro */
+.home{
+  color: #0b2a3a;
   background:
-    radial-gradient(1200px 600px at 20% 10%, rgba(58, 255, 225, .18), transparent 55%),
-    radial-gradient(900px 500px at 90% 20%, rgba(64, 140, 255, .18), transparent 55%),
-    linear-gradient(135deg, #053a3a 0%, #07304a 55%, #031a2a 100%);
+    radial-gradient(1100px 520px at 15% 10%, rgba(120, 210, 255, .55), transparent 55%),
+    radial-gradient(900px 520px at 90% 20%, rgba(170, 240, 255, .55), transparent 55%),
+    linear-gradient(135deg, #eaf8ff 0%, #dff3ff 40%, #cfeeff 100%);
 }
 
 /* Header */
-.top {
+.top{
   max-width: 1200px;
   margin: 0 auto;
-  padding: 28px 20px 18px;
+  padding: 22px 20px 16px;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 18px;
 }
-.brand { display: flex; gap: 14px; align-items: center; }
-.logo {
-  width: 54px; height: 54px; border-radius: 16px;
-  display: grid; place-items: center;
-  background: rgba(255,255,255,.12);
-  border: 1px solid rgba(255,255,255,.22);
-  font-weight: 800; font-size: 22px;
-}
-.brand h1 {
-  margin: 0;
-  font-size: clamp(34px, 3.5vw, 54px);
-  letter-spacing: .5px;
-  line-height: 1.05;
-}
-.brand p { margin: 6px 0 0; opacity: .85; }
 
-.cta { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
-.pill {
+.brand{
+  display:flex;
+  align-items:center;
+  gap: 14px;
+}
+
+.hospital-logo{
+  height: 150px;        /* ~4cm aprox */
+  width: auto;
+  max-width: 380px;     /* ~10cm aprox */
+  object-fit: contain;
+  filter: drop-shadow(0 6px 18px rgba(0,0,0,.10));
+}
+
+.brand-text .subtitle{
+  margin: 0;
+  font-size: 14px;
+  color: rgba(11, 42, 58, .78);
+}
+
+.cta{
+  display:flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.pill{
   padding: 8px 12px;
   border-radius: 999px;
-  background: rgba(255,255,255,.10);
-  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.65);
+  border: 1px solid rgba(11, 42, 58, .12);
   font-size: 13px;
+  color: rgba(11, 42, 58, .85);
+  box-shadow: 0 6px 20px rgba(0,0,0,.06);
   backdrop-filter: blur(8px);
 }
 
-/* Layout principal */
-.layout {
+@media (max-width: 700px){
+  .hospital-logo{ height: 110px; max-width: 300px; }
+  .top{ flex-direction: column; align-items: flex-start; }
+}
+
+/* Layout */
+.layout{
   max-width: 1200px;
   margin: 0 auto;
-  padding: 10px 20px 90px; /* espacio para footer */
+  padding: 10px 20px 90px;
   position: relative;
 }
 
 .gallery-card{
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.70);
+  border: 1px solid rgba(11, 42, 58, .12);
   border-radius: 18px;
   padding: 18px;
+  box-shadow: 0 14px 40px rgba(0,0,0,.06);
   backdrop-filter: blur(10px);
 }
+
 .gallery-card h2{ margin: 0 0 6px; font-size: 18px; }
 .muted{ opacity: .78; }
-.small{ font-size: 12px; }
+.small{ font-size: 12px; opacity: .75; }
 
-/* Cuadrícula de fotos */
+/* Grid */
 .grid{
   margin-top: 14px;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
-@media (max-width: 980px){
-  .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media (max-width: 560px){
-  .top{ flex-direction: column; }
-  .grid{ grid-template-columns: 1fr; }
-}
+@media (max-width: 980px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px){ .grid{ grid-template-columns: 1fr; } }
 
 .tile{
   margin: 0;
   border-radius: 16px;
   overflow: hidden;
-  border: 1px solid rgba(255,255,255,.18);
-  background: rgba(0,0,0,.2);
+  border: 1px solid rgba(11, 42, 58, .12);
+  background: rgba(255,255,255,.55);
   position: relative;
   min-height: 170px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.05);
 }
 .tile img{
   width: 100%;
   height: 190px;
   object-fit: cover;
   display: block;
-  filter: saturate(1.05) contrast(1.05);
 }
 .tile figcaption{
   position: absolute;
@@ -106,25 +126,25 @@ body {
   padding: 6px 10px;
   border-radius: 999px;
   font-size: 12px;
-  background: rgba(0,0,0,.35);
-  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.75);
+  border: 1px solid rgba(11,42,58,.10);
   backdrop-filter: blur(8px);
 }
 
-/* Login abajo derecha (no pequeño) */
+/* Login fijo */
 .login-card{
   position: fixed;
   right: 18px;
   bottom: 18px;
   width: min(420px, calc(100vw - 36px));
-  background: rgba(255,255,255,.10);
-  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.78);
+  border: 1px solid rgba(11, 42, 58, .14);
   border-radius: 18px;
   padding: 16px 16px 14px;
   backdrop-filter: blur(12px);
-  box-shadow: 0 12px 50px rgba(0,0,0,.35);
+  box-shadow: 0 16px 48px rgba(0,0,0,.10);
+  color: #0b2a3a;
 }
-.login-card h3{ margin: 0 0 10px; font-size: 16px; }
 
 .form label{
   display: block;
@@ -132,19 +152,21 @@ body {
   opacity: .9;
   margin-top: 10px;
 }
+
 .form input{
   width: 100%;
   margin-top: 6px;
   padding: 12px 12px;
   border-radius: 12px;
-  border: 1px solid rgba(255,255,255,.20);
-  background: rgba(0,0,0,.20);
-  color: #fff;
+  border: 1px solid rgba(11, 42, 58, .18);
+  background: rgba(255,255,255,.85);
+  color: #0b2a3a;
   outline: none;
 }
+
 .form input:focus{
-  border-color: rgba(58, 255, 225, .6);
-  box-shadow: 0 0 0 3px rgba(58, 255, 225, .15);
+  border-color: rgba(0, 160, 220, .55);
+  box-shadow: 0 0 0 3px rgba(0, 160, 220, .15);
 }
 
 .form button{
@@ -155,13 +177,13 @@ body {
   border: 0;
   cursor: pointer;
   font-weight: 700;
-  color: #031a2a;
-  background: linear-gradient(90deg, rgba(58,255,225,1), rgba(64,140,255,1));
+  color: #ffffff;
+  background: linear-gradient(90deg, #22b7ff, #4cd6ff);
 }
 
 .msg{ margin: 10px 0 0; font-size: 12px; }
-.msg.error{ color: #ffd0d0; }
-.msg.ok{ color: #c8ffe9; }
+.msg.error{ color: #b00020; }
+.msg.ok{ color: #0b6b3a; }
 
 .demo{
   margin-top: 10px;
@@ -181,6 +203,7 @@ body {
   flex-wrap: wrap;
   opacity: .85;
 }
+
 
 .doctor-wrap{max-width:1000px;margin:0 auto;padding:24px;color:#0b1220;font-family:system-ui}
 .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
