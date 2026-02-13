@@ -7,85 +7,110 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body style="background:#f4f6fb;">
-  <div class="doctor-wrap">
-    <div class="topbar">
-      <div>
-        <h2 style="margin:0;">Detección de padecimiento</h2>
-        <div id="who" class="small"></div>
+<body class="clinic">
+  <div class="clinic-wrap">
+
+    <!-- Header con logo + acciones -->
+    <header class="clinic-top">
+      <div class="clinic-brand">
+        <img class="clinic-logo" src="https://www.laconcepcion.com.mx/assets/images/logo-color132.png" alt="Logotipo del hospital" />
+        <div class="clinic-brand-text">
+          <div id="welcome" class="clinic-welcome">¡Bienvenido(a)!</div>
+          <div id="who" class="clinic-who"></div>
+        </div>
       </div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+
+      <div class="clinic-actions">
         <button id="toHome" class="btn-light">Volver</button>
         <button id="logout" class="btn-light">Cerrar sesión</button>
       </div>
-    </div>
+    </header>
 
-    <div class="row">
-      <div class="col card">
-        <h3 style="margin-top:0;">Selecciona método</h3>
+    <!-- Contenido -->
+    <main class="clinic-grid">
 
-        <div style="display:flex; gap:10px; flex-wrap:wrap; margin:10px 0;">
-          <button id="modeCam" class="btn-primary">Usar cámara</button>
-          <button id="modeFile" class="btn-light">Subir imagen</button>
+      <!-- Panel izquierdo -->
+      <section class="card clinic-card">
+        <div class="card-head">
+          <div>
+            <h3 class="card-title">Detección de padecimiento</h3>
+            <p class="card-subtitle">Selecciona un método para analizar una imagen.</p>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+          <button id="modeCam" class="tab tab-active" type="button">Usar cámara</button>
+          <button id="modeFile" class="tab" type="button">Subir imagen</button>
         </div>
 
         <!-- CAM -->
-        <div id="camPanel" style="display:none;">
-          <p class="small">Activa la cámara y luego presiona <b>Analizar</b>.</p>
+        <div id="camPanel" class="panel" style="display:none;">
+          <p class="muted small">Activa la cámara y luego presiona <b>Analizar</b>.</p>
+
           <div class="webcam-box">
             <video id="camVideo" playsinline autoplay muted></video>
-        </div>
+          </div>
 
-<!-- canvas oculto para predicción -->
-    <canvas id="camCanvas" width="320" height="240" style="display:none;"></canvas>
+          <canvas id="camCanvas" width="320" height="240" style="display:none;"></canvas>
 
-
-
-          <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;">
-            <button id="startCam" class="btn-primary">Iniciar cámara + modelo</button>
-            <button id="analyzeCam" class="btn-light" disabled>Analizar</button>
+          <div class="actions-row">
+            <button id="startCam" class="btn-primary" type="button">Iniciar cámara + modelo</button>
+            <button id="analyzeCam" class="btn-light" type="button" disabled>Analizar</button>
           </div>
         </div>
 
         <!-- FILE -->
-        <div id="filePanel" style="display:none;">
-          <p class="small">Sube una imagen (JPG/PNG) y luego presiona <b>Analizar</b>.</p>
+        <div id="filePanel" class="panel" style="display:none;">
+          <p class="muted small">Sube una imagen (JPG/PNG) y luego presiona <b>Analizar</b>.</p>
 
-          <input id="fileInput" type="file" accept="image/*" />
-          <div style="margin-top:10px;">
-            <canvas id="fileCanvas" width="320" height="240" style="display:none;border-radius:12px;border:1px solid #e6e6ef;"></canvas>
+          <div class="file-row">
+            <input id="fileInput" class="file-input" type="file" accept="image/*" />
           </div>
 
-          <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;">
-            <button id="analyzeFile" class="btn-primary" disabled>Analizar</button>
+          <div class="preview-row">
+            <canvas id="fileCanvas" width="320" height="240" style="display:none;"></canvas>
+          </div>
+
+          <div class="actions-row">
+            <button id="analyzeFile" class="btn-primary" type="button" disabled>Analizar</button>
           </div>
         </div>
 
-        <div id="status" class="small" style="margin-top:14px;"></div>
-      </div>
+        <div id="status" class="status">Listo.</div>
+      </section>
 
-      <div class="col card">
-        <h3 style="margin-top:0;">Resultado actual</h3>
-        <p><b>Padecimiento detectado:</b> <span id="label">—</span></p>
-        <p><b>Confianza:</b> <span id="conf">—</span></p>
-
-        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
-          <div class="sticky-actions">
-            <button id="continue" class="btn-primary" disabled>Continuar</button>
-            </div>
+      <!-- Panel derecho -->
+      <aside class="card clinic-card">
+        <div class="card-head">
+          <div>
+            <h3 class="card-title">Resultado actual</h3>
+            <p class="card-subtitle">Se mostrará el padecimiento detectado y su confianza.</p>
+          </div>
         </div>
 
-        <p class="small" style="margin-top:10px;">
-          Nota: esto es un proyecto académico y no sustituye diagnóstico médico.
-        </p>
-      </div>
-    </div>
+        <div class="result-box">
+          <div class="result-line">
+            <span class="result-label">Padecimiento detectado</span>
+            <span id="label" class="result-value">—</span>
+          </div>
+
+          <div class="result-line">
+            <span class="result-label">Confianza</span>
+            <span id="conf" class="result-value">—</span>
+          </div>
+        </div>
+
+        <button id="continue" class="btn-primary btn-wide" type="button" disabled>Continuar</button>
+      </aside>
+
+    </main>
   </div>
 
   <!-- Dependencias Teachable Machine -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
-
   <script src="doctor.js"></script>
 </body>
 </html>
+

@@ -2,7 +2,10 @@
 const raw = localStorage.getItem("doctor_session");
 if (!raw) window.location.href = "index.html";
 const session = JSON.parse(raw);
-document.getElementById("who").textContent = `Sesión: ${session.name} (${session.username})`;
+document.getElementById("welcome").textContent = `¡Bienvenido(a), ${session.name}!`;
+document.getElementById("who").textContent = `Usuario: ${session.username}`;
+
+
 
 document.getElementById("logout").addEventListener("click", () => {
   stopCamera(); // ✅
@@ -61,7 +64,7 @@ async function loadModelOnce() {
   const metadataURL = MODEL_URL + "metadata.json";
   model = await tmImage.load(modelURL, metadataURL);
   maxPredictions = model.getTotalClasses();
-  setStatus("Modelo cargado ✅");
+  setStatus("Modelo cargado");
 }
 
 function updateResult(top) {
@@ -85,6 +88,9 @@ modeCamBtn.addEventListener("click", () => {
   camPanel.style.display = "block";
   filePanel.style.display = "none";
   setStatus("Modo cámara seleccionado.");
+  modeCamBtn.classList.add("tab-active");
+  modeFileBtn.classList.remove("tab-active");
+
 });
 
 modeFileBtn.addEventListener("click", () => {
@@ -98,6 +104,9 @@ modeFileBtn.addEventListener("click", () => {
 
   // ✅ resetea estado de archivo
   resetFileState();
+  modeFileBtn.classList.add("tab-active");
+  modeCamBtn.classList.remove("tab-active");
+
 });
 
 // ====== Iniciar cámara ======
@@ -122,22 +131,22 @@ startCamBtn.addEventListener("click", async () => {
     await camVideo.play();
 
     analyzeCamBtn.disabled = false;
-    setStatus("Cámara lista ✅ Presiona Analizar.");
+    setStatus("Cámara lista. Presiona Analizar.");
   } catch (e) {
     console.error("Error cámara:", e);
 
     if (e?.name === "NotAllowedError") {
       alert("Permiso de cámara denegado. Permite la cámara en el navegador.");
-      setStatus("Permiso denegado ❌");
+      setStatus("Permiso denegado");
     } else if (e?.name === "NotFoundError") {
       alert("No se encontró cámara conectada.");
-      setStatus("Sin cámara ❌");
+      setStatus("Sin cámara");
     } else if (e?.name === "NotReadableError") {
       alert("La cámara está siendo usada por otra app (Zoom/Teams/Meet). Ciérrala e intenta de nuevo.");
-      setStatus("Cámara ocupada ❌");
+      setStatus("Cámara ocupada");
     } else {
       alert("No se pudo iniciar la cámara. Revisa la consola (F12).");
-      setStatus("Error iniciando cámara ❌");
+      setStatus("Error iniciando cámara");
     }
 
     startCamBtn.disabled = false;
@@ -154,7 +163,7 @@ async function predictTop(sourceEl) {
 // ====== (Opcional) Redirigir automático ======
 function goToResult(top) {
   updateResult(top);
-  setStatus("Resultado obtenido ✅ Redirigiendo...");
+  setStatus("Resultado obtenido. Redirigiendo.");
 
   localStorage.setItem("last_prediction", JSON.stringify({
     label: top.label,
@@ -197,12 +206,12 @@ analyzeCamBtn.addEventListener("click", async () => {
     const top = await predictTop(camCanvas);
 
     updateResult(top);
-    setStatus("Resultado obtenido ✅ Puedes continuar.");
+    setStatus("Resultado obtenido. Puedes continuar.");
     // o: goToResult(top);
   } catch (e) {
     console.error("Error en Analizar (cámara):", e);
     alert("Error al analizar cámara. Abre consola (F12) para ver detalles.");
-    setStatus("Error al analizar ❌");
+    setStatus("Error al analizar. ");
   }
 });
 
@@ -253,19 +262,19 @@ fileInput?.addEventListener("change", async () => {
 
       fileReady = true;
       analyzeFileBtn.disabled = false;
-      setStatus("Imagen cargada ✅ Presiona Analizar.");
+      setStatus("Imagen cargada. Presiona Analizar.");
     };
 
     img.onerror = () => {
       alert("No se pudo leer la imagen. Intenta con otra.");
-      setStatus("Error leyendo imagen ❌");
+      setStatus("Error leyendo imagen.");
     };
 
     img.src = dataUrl;
   } catch (e) {
     console.error("Error al cargar imagen:", e);
     alert("Error al cargar la imagen. Revisa consola (F12).");
-    setStatus("Error al cargar imagen ❌");
+    setStatus("Error al cargar imagen.");
   }
 });
 
@@ -284,12 +293,12 @@ analyzeFileBtn.addEventListener("click", async () => {
     const top = await predictTop(fileCanvas);
 
     updateResult(top);
-    setStatus("Resultado obtenido ✅ Puedes continuar.");
+    setStatus("Resultado obtenido. Puedes continuar.");
     // o: goToResult(top);
   } catch (e) {
     console.error("Error en Analizar (archivo):", e);
     alert("Error al analizar imagen. Abre consola (F12) para ver detalles.");
-    setStatus("Error al analizar ❌");
+    setStatus("Error al analizar.");
   }
 });
 

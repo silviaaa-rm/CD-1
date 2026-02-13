@@ -238,3 +238,218 @@ body{
   display: block !important;
   object-fit: cover;
 }
+
+/* =========================
+Doctor Page - estilo celeste (igual que index)
+========================= */
+.clinic{
+  color: #0b2a3a;
+  background:
+    radial-gradient(1100px 520px at 15% 10%, rgba(120, 210, 255, .55), transparent 55%),
+    radial-gradient(900px 520px at 90% 20%, rgba(170, 240, 255, .55), transparent 55%),
+    linear-gradient(135deg, #eaf8ff 0%, #dff3ff 40%, #cfeeff 100%);
+  min-height: 100vh;
+}
+
+.clinic-wrap{
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.clinic-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 12px 6px 6px;
+}
+
+.clinic-brand{
+  display:flex;
+  align-items:center;
+  gap: 14px;
+}
+
+.clinic-logo{
+  height: 80px;
+  width: auto;
+  max-width: 320px;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 18px rgba(0,0,0,.10));
+}
+
+.clinic-brand-text{ display:flex; flex-direction:column; gap: 2px; }
+
+.clinic-welcome{
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.clinic-who{
+  font-size: 13px;
+  opacity: .80;
+}
+
+.clinic-actions{
+  display:flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.clinic-grid{
+  display:grid;
+  grid-template-columns: 1.25fr .9fr;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+@media (max-width: 950px){
+  .clinic-grid{ grid-template-columns: 1fr; }
+  .clinic-logo{ height: 70px; }
+}
+
+/* Cards más suaves */
+.clinic-card{
+  background: rgba(255,255,255,.78);
+  border: 1px solid rgba(11, 42, 58, .14);
+  border-radius: 18px;
+  box-shadow: 0 16px 48px rgba(0,0,0,.08);
+  backdrop-filter: blur(12px);
+}
+
+.card-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.card-title{
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+}
+
+.card-subtitle{
+  margin: 4px 0 0;
+  font-size: 13px;
+  opacity: .78;
+}
+
+.badge{
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.70);
+  border: 1px solid rgba(11,42,58,.12);
+}
+
+/* Tabs */
+.tabs{
+  display:flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 10px 0 8px;
+}
+
+.tab{
+  border: 1px solid rgba(11,42,58,.18);
+  background: rgba(255,255,255,.72);
+  border-radius: 999px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.tab-active{
+  border: none;
+  background: linear-gradient(90deg, #22b7ff, #4cd6ff);
+  color: #fff;
+}
+
+/* Panel */
+.panel{ margin-top: 10px; }
+
+/* Webcam y preview */
+.webcam-box{
+  width: 100%;
+  max-width: 520px;
+  aspect-ratio: 4 / 3;
+  background: #111;
+  border-radius: 16px;
+  border: 1px solid rgba(11,42,58,.14);
+  overflow: hidden;
+  display:grid;
+  place-items:center;
+}
+
+.webcam-box video{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display:block;
+}
+
+#fileCanvas{
+  width: 100%;
+  max-width: 520px;
+  aspect-ratio: 4 / 3;
+  border-radius: 16px;
+  border: 1px solid rgba(11,42,58,.14);
+  background: rgba(255,255,255,.65);
+}
+
+/* Acciones */
+.actions-row{
+  margin-top: 12px;
+  display:flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-wide{ width: 100%; margin-top: 10px; }
+
+/* Status */
+.status{
+  margin-top: 12px;
+  font-size: 12px;
+  opacity: .80;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(11,42,58,.12);
+  background: rgba(255,255,255,.55);
+}
+
+/* Resultado */
+.result-box{
+  margin-top: 8px;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(11,42,58,.12);
+  background: rgba(255,255,255,.55);
+}
+
+.result-line{
+  display:flex;
+  justify-content:space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(11,42,58,.08);
+}
+.result-line:last-child{ border-bottom: none; }
+
+.result-label{ font-size: 13px; opacity: .78; }
+.result-value{ font-size: 14px; font-weight: 800; }
+
+/* Input file */
+.file-input{
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(11,42,58,.18);
+  background: rgba(255,255,255,.78);
+}
