@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Resultado | Hospital</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body style="background:#f4f6fb;">
+  <div class="doctor-wrap">
+    <div class="topbar">
+      <div>
+        <h2 style="margin:0;">Resultado y recomendación</h2>
+        <div class="small">Información orientativa — no sustituye diagnóstico médico</div>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button id="back" class="btn-light">Volver</button>
+        <button id="logout" class="btn-light">Cerrar sesión</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col card">
+        <h3 style="margin-top:0;">Detección</h3>
+        <p><b>Padecimiento detectado:</b> <span id="label">—</span></p>
+        <p><b>Confianza:</b> <span id="conf">—</span></p>
+        <p class="small" id="termInfo" style="margin-top:10px;"></p>
+      </div>
+
+      <div class="col card">
+        <h3 style="margin-top:0;">Recomendación rápida</h3>
+        <div id="quickRec" class="small">Cargando…</div>
+
+        <hr style="border:none;border-top:1px solid #eee;margin:16px 0;" />
+
+        <h3 style="margin:0 0 8px;">Signos de alarma</h3>
+        <div id="redFlags" class="small">Cargando…</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0;">Fuentes oficiales</h3>
+      <div id="sources" class="small">Cargando…</div>
+    </div>
+  </div>
+
+  <script>
+    // ====== Seguridad + navegación ======
+    const raw = localStorage.getItem("doctor_session");
+    if (!raw) window.location.href = "index.html";
+
+    document.getElementById("back").addEventListener("click", () => {
+      window.location.href = "doctor.html";
+    });
+    document.getElementById("logout").addEventListener("click", () => {
+      localStorage.removeItem("doctor_session");
+      window.location.href = "index.html";
+    });
+
+    // ====== Lectura del resultado ======
+    const predRaw = localStorage.getItem("last_prediction");
+    if (!predRaw) window.location.href = "doctor.html";
+    const pred = JSON.parse(predRaw);
+
+    document.getElementById("label").textContent = pred.label;
+    document.getElementById("conf").textContent = (pred.confidence * 100).toFixed(1) + "%";
+
+    // Normaliza para evitar fallas por espacios / mayúsculas
+    const normalize = (s) => String(s || "").trim().toLowerCase();
+    const predKey = normalize(pred.label);
+
+    // ====== Recomendaciones locales (sin API) ======
+    const RECS = {
+      "cardiomegalia": {
+        termInfo: "Hallazgo en imagen; requiere correlación clínica y estudios.",
+        quick: [
+          "Sugerir valoración médica para confirmar causa (p. ej., ECG y ecocardiograma si procede).",
+          "Recomendar control de factores de riesgo (presión arterial, diabetes, tabaquismo) y seguimiento.",
+          "Indicar urgencias si aparecen síntomas agudos."
+        ],
+        redFlags: [
+          "Dolor u opresión en pecho o falta de aire en reposo/al acostarse.",
+          "Desmayo, palpitaciones intensas o ritmo irregular.",
+          "Hinchazón marcada en piernas o empeoramiento rápido."
+        ],
+        sources: [
+          { name: "MedlinePlus Enciclopedia: Corazón agrandado", url: "https://medlineplus.gov/ency/article/003103.htm" },
+          { name: "NHLBI: Heart Failure (info general)", url: "https://www.nhlbi.nih.gov/health/heart-failure" }
+        ]
+      },
+
+      "derrame pleural": {
+        termInfo: "Acumulación de líquido alrededor del pulmón; el manejo depende de la causa.",
+        quick: [
+          "Sugerir valoración médica para identificar la causa; puede requerir estudios y, a veces, análisis del líquido.",
+          "Vigilar falta de aire y dolor torácico; evitar esfuerzos si hay disnea.",
+          "No automedicarse; el tratamiento depende de la causa."
+        ],
+        redFlags: [
+          "Falta de aire importante o empeoramiento progresivo.",
+          "Dolor fuerte en pecho o fiebre alta persistente.",
+          "Labios azulados, confusión o desmayo."
+        ],
+        sources: [
+          { name: "MedlinePlus: Pleural effusion (EN)", url: "https://medlineplus.gov/pleuraleffusion.html" },
+          { name: "MedlinePlus Enciclopedia: Pleural effusion (EN)", url: "https://medlineplus.gov/ency/article/000086.htm" }
+        ]
+      },
+
+      "neumonia bacteriana": {
+        termInfo: "Infección pulmonar; suele requerir evaluación médica y tratamiento indicado.",
+        quick: [
+          "Sugerir valoración médica si hay fiebre alta, dolor torácico o dificultad para respirar.",
+          "Recomendar reposo e hidratación; evitar tabaco/humo.",
+          "Evitar antibióticos sin receta; seguir indicación profesional."
+        ],
+        redFlags: [
+          "Dificultad respiratoria, respiración rápida, labios azulados.",
+          "Confusión, somnolencia marcada, deshidratación severa.",
+          "Empeoramiento rápido o fiebre alta persistente."
+        ],
+        sources: [
+          { name: "MedlinePlus (ES): Neumonía", url: "https://medlineplus.gov/spanish/pneumonia.html" },
+          { name: "CDC: Pneumonia (EN)", url: "https://www.cdc.gov/pneumonia/index.html" }
+        ]
+      },
+
+      "tuberculosis": {
+        termInfo: "Enfermedad infecciosa; requiere diagnóstico y tratamiento supervisado.",
+        quick: [
+          "Sugerir valoración médica para confirmar diagnóstico (pruebas específicas) y definir tratamiento.",
+          "Si hay tos prolongada, fiebre, sudores nocturnos o pérdida de peso, recomendar consulta pronta.",
+          "Seguir medidas de prevención y control de contagio según indicación médica."
+        ],
+        redFlags: [
+          "Tos con sangre o dificultad respiratoria importante.",
+          "Fiebre persistente, debilidad severa o pérdida de peso marcada.",
+          "Empeoramiento rápido o dolor torácico fuerte."
+        ],
+        sources: [
+          { name: "WHO: Tuberculosis", url: "https://www.who.int/health-topics/tuberculosis" },
+          { name: "CDC: Tuberculosis", url: "https://www.cdc.gov/tb/" },
+          { name: "MedlinePlus (ES): Tuberculosis", url: "https://medlineplus.gov/spanish/tuberculosis.html" }
+        ]
+      },
+
+      "normal": {
+        termInfo: "El modelo no detectó un patrón fuerte de las clases entrenadas. No descarta enfermedad si hay síntomas.",
+        quick: [
+          "Si hay síntomas, la evaluación debe basarse en la clínica (no solo en una imagen).",
+          "Recomendar consulta si hay fiebre persistente, tos prolongada o malestar que empeora."
+        ],
+        redFlags: [
+          "Dificultad respiratoria, dolor en pecho, confusión, desmayo, coloración azulada o empeoramiento rápido."
+        ],
+        sources: [
+          { name: "MedlinePlus (ES): Temas de salud", url: "https://medlineplus.gov/spanish/healthtopics.html" }
+        ]
+      }
+    };
+
+    const cfg = RECS[predKey];
+
+    const termInfoEl = document.getElementById("termInfo");
+    const quickEl = document.getElementById("quickRec");
+    const flagsEl = document.getElementById("redFlags");
+    const sourcesEl = document.getElementById("sources");
+
+    if (!cfg) {
+      termInfoEl.textContent = "No hay recomendación configurada para este label. Revisa coincidencia exacta del nombre.";
+      quickEl.innerHTML = `<p>No configurado para: <kbd>${escapeHtml(pred.label)}</kbd></p>`;
+      flagsEl.innerHTML = `<ul style="margin:0;padding-left:18px;"><li>Si hay síntomas graves o empeoran: acudir a urgencias.</li></ul>`;
+      sourcesEl.innerHTML = `<p class="small">Agrega este label al objeto RECS en result.html.</p>`;
+    } else {
+      termInfoEl.textContent = cfg.termInfo;
+
+      quickEl.innerHTML =
+        `<ul style="margin:0;padding-left:18px;">` +
+        cfg.quick.map(x => `<li>${escapeHtml(x)}</li>`).join("") +
+        `</ul>`;
+
+      flagsEl.innerHTML =
+        `<ul style="margin:0;padding-left:18px;">` +
+        cfg.redFlags.map(x => `<li>${escapeHtml(x)}</li>`).join("") +
+        `</ul>`;
+
+      sourcesEl.innerHTML =
+        `<ul style="margin:0;padding-left:18px;">` +
+        cfg.sources.map(s => `<li><a href="${s.url}" target="_blank" rel="noopener">${escapeHtml(s.name)}</a></li>`).join("") +
+        `</ul>`;
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, m => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[m]));
+    }
+  </script>
+</body>
+</html>

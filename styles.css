@@ -181,3 +181,37 @@ body {
   flex-wrap: wrap;
   opacity: .85;
 }
+
+.doctor-wrap{max-width:1000px;margin:0 auto;padding:24px;color:#0b1220;font-family:system-ui}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap}
+.col{flex:1;min-width:290px}
+.card{background:#fff;border:1px solid #e6e6ef;border-radius:14px;padding:16px;margin-top:16px}
+.small{font-size:12px;opacity:.75}
+.btn-primary{padding:10px 12px;border-radius:10px;border:0;background:#2c6bff;color:#fff;font-weight:700;cursor:pointer}
+.btn-light{padding:10px 12px;border-radius:10px;border:1px solid #ddd;background:#fff;cursor:pointer}
+
+.sticky-actions{
+  position: sticky;
+  bottom: 12px;
+  padding-top: 12px;
+  background: linear-gradient(to top, rgba(244,246,251,1), rgba(244,246,251,0));
+}
+
+.webcam-box{
+  width: 320px;
+  height: 240px;
+  background: #111;
+  border-radius: 12px;
+  border: 1px solid #e6e6ef;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.webcam-box canvas, .webcam-box video{
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  object-fit: cover;
+}
