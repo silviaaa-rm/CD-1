@@ -7,49 +7,94 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body style="background:#f4f6fb;">
-  <div class="doctor-wrap">
-    <div class="topbar">
-      <div>
-        <h2 style="margin:0;">Resultado y recomendación</h2>
-        <div class="small">Información orientativa — no sustituye diagnóstico médico</div>
+<body class="clinic">
+  <div class="clinic-wrap">
+
+    <!-- Header con logo + acciones -->
+    <header class="clinic-top">
+      <div class="clinic-brand">
+        <img class="clinic-logo" src="https://www.laconcepcion.com.mx/assets/images/logo-color132.png" alt="Logotipo del hospital" />
+        <div class="clinic-brand-text">
+          <div id="welcome" class="clinic-welcome">Resultado y recomendación</div>
+          <div id="who" class="clinic-who"></div>
+        </div>
       </div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+
+      <div class="clinic-actions">
         <button id="back" class="btn-light">Volver</button>
         <button id="logout" class="btn-light">Cerrar sesión</button>
       </div>
-    </div>
+    </header>
 
-    <div class="row">
-      <div class="col card">
-        <h3 style="margin-top:0;">Detección</h3>
-        <p><b>Padecimiento detectado:</b> <span id="label">—</span></p>
-        <p><b>Confianza:</b> <span id="conf">—</span></p>
-        <p class="small" id="termInfo" style="margin-top:10px;"></p>
+    <!-- Contenido -->
+    <main class="clinic-grid">
+
+      <!-- Panel izquierdo: Detección -->
+      <section class="card clinic-card">
+        <div class="card-head">
+          <div>
+            <h3 class="card-title">Detección</h3>
+            <p class="card-subtitle">Información orientativa — no sustituye diagnóstico médico.</p>
+          </div>
+          <div class="badge">Resultado</div>
+        </div>
+
+        <div class="result-box">
+          <div class="result-line">
+            <span class="result-label">Padecimiento detectado</span>
+            <span id="label" class="result-value">—</span>
+          </div>
+          <div class="result-line">
+            <span class="result-label">Confianza</span>
+            <span id="conf" class="result-value">—</span>
+          </div>
+        </div>
+
+        <p class="muted small" id="termInfo" style="margin-top:12px;"></p>
+      </section>
+
+      <!-- Panel derecho: Recomendaciones -->
+      <aside class="card clinic-card">
+        <div class="card-head">
+          <div>
+            <h3 class="card-title">Recomendación</h3>
+          </div>
+        </div>
+
+        <h4 class="sec-title">Recomendación rápida</h4>
+        <div id="quickRec" class="sec-body">Cargando…</div>
+
+        <h4 class="sec-title" style="margin-top:14px;">Signos de alarma</h4>
+        <div id="redFlags" class="sec-body">Cargando…</div>
+      </aside>
+
+    </main>
+
+    <!-- Fuentes -->
+    <section class="card clinic-card" style="margin-top:16px;">
+      <div class="card-head">
+        <div>
+          <h3 class="card-title">Fuentes</h3>
+          <p class="card-subtitle">Sitios médicos/reconocidos usados como referencia.</p>
+        </div>
       </div>
 
-      <div class="col card">
-        <h3 style="margin-top:0;">Recomendación rápida</h3>
-        <div id="quickRec" class="small">Cargando…</div>
+      <div id="sources" class="sec-body">Cargando…</div>
+    </section>
 
-        <hr style="border:none;border-top:1px solid #eee;margin:16px 0;" />
-
-        <h3 style="margin:0 0 8px;">Signos de alarma</h3>
-        <div id="redFlags" class="small">Cargando…</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3 style="margin-top:0;">Fuentes oficiales</h3>
-      <div id="sources" class="small">Cargando…</div>
-    </div>
   </div>
 
   <script>
-    // ====== Seguridad + navegación ======
+    // ====== Seguridad ======
     const raw = localStorage.getItem("doctor_session");
     if (!raw) window.location.href = "index.html";
+    const session = JSON.parse(raw);
 
+    // Header
+    document.getElementById("welcome").textContent = `¡Bienvenido(a), ${session.name}!`;
+    document.getElementById("who").textContent = `Usuario: ${session.username}`;
+
+    // Navegación
     document.getElementById("back").addEventListener("click", () => {
       window.location.href = "doctor.html";
     });
@@ -58,7 +103,7 @@
       window.location.href = "index.html";
     });
 
-    // ====== Lectura del resultado ======
+    // ====== Predicción ======
     const predRaw = localStorage.getItem("last_prediction");
     if (!predRaw) window.location.href = "doctor.html";
     const pred = JSON.parse(predRaw);
@@ -66,72 +111,80 @@
     document.getElementById("label").textContent = pred.label;
     document.getElementById("conf").textContent = (pred.confidence * 100).toFixed(1) + "%";
 
-    // Normaliza para evitar fallas por espacios / mayúsculas
+    // Normaliza label (evita fallas por mayúsculas/espacios)
     const normalize = (s) => String(s || "").trim().toLowerCase();
     const predKey = normalize(pred.label);
 
     // ====== Recomendaciones locales (sin API) ======
     const RECS = {
       "cardiomegalia": {
-        termInfo: "Hallazgo en imagen; requiere correlación clínica y estudios.",
+        termInfo: "La radiografía muestra signos compatibles con un posible agrandamiento del corazón, lo cual puede estar asociado a hipertensión arterial, miocardiopatías o enfermedades valvulares.",
         quick: [
-          "Sugerir valoración médica para confirmar causa (p. ej., ECG y ecocardiograma si procede).",
-          "Recomendar control de factores de riesgo (presión arterial, diabetes, tabaquismo) y seguimiento.",
-          "Indicar urgencias si aparecen síntomas agudos."
+          "Complementar con electrocardiograma y ecocardiograma para evaluar tamaño y función cardíaca.",
+          "Considerar estudios adicionales según criterio médico (análisis de sangre y/o imagen avanzada).",
+          "El tratamiento depende de la causa e incluye control de presión arterial, ritmo cardíaco o retención de líquidos.",
+          "Acudir a valoración con cardiología para confirmar diagnóstico y plan terapéutico."
         ],
         redFlags: [
-          "Dolor u opresión en pecho o falta de aire en reposo/al acostarse.",
-          "Desmayo, palpitaciones intensas o ritmo irregular.",
-          "Hinchazón marcada en piernas o empeoramiento rápido."
+          "Dificultad para respirar o falta de aire en reposo.",
+          "Ritmo cardíaco anormal o palpitaciones intensas.",
+          "Retención de líquidos (hinchazón en piernas).",
+          "Dolor en el pecho o molestias en la parte superior del cuerpo."
         ],
         sources: [
-          { name: "MedlinePlus Enciclopedia: Corazón agrandado", url: "https://medlineplus.gov/ency/article/003103.htm" },
-          { name: "NHLBI: Heart Failure (info general)", url: "https://www.nhlbi.nih.gov/health/heart-failure" }
+          { name: "Apollo Hospitals: Agrandamiento del corazón", url: "https://www.apollohospitals.com/es/diseases-and-conditions/enlarged-heart-diagnosis-and-treatment" },
+          { name: "NHLBI: Heart Failure (referencia)", url: "https://www.nhlbi.nih.gov/health/heart-failure" }
         ]
       },
 
-      "derrame pleural": {
-        termInfo: "Acumulación de líquido alrededor del pulmón; el manejo depende de la causa.",
+      "neumotórax": {
+        termInfo: "La radiografía sugiere la posible presencia de neumotórax, condición en la que el pulmón puede colapsarse por acumulación de aire en el espacio pleural.",
         quick: [
-          "Sugerir valoración médica para identificar la causa; puede requerir estudios y, a veces, análisis del líquido.",
-          "Vigilar falta de aire y dolor torácico; evitar esfuerzos si hay disnea.",
-          "No automedicarse; el tratamiento depende de la causa."
+          "Recomendar valoración médica inmediata para confirmar diagnóstico con estudios complementarios.",
+          "Dependiendo de la gravedad: observación médica o colocación de drenaje torácico.",
+          "En casos recurrentes, el especialista puede considerar procedimientos preventivos.",
+          "Acudir a urgencias si presenta dolor torácico intenso o falta de aire."
         ],
         redFlags: [
-          "Falta de aire importante o empeoramiento progresivo.",
-          "Dolor fuerte en pecho o fiebre alta persistente.",
-          "Labios azulados, confusión o desmayo."
+          "Dolor torácico súbito e intenso.",
+          "Dificultad respiratoria (disnea).",
+          "Tos seca persistente.",
+          "Síncope (desmayo) o mareo intenso.",
+          "Tos con sangre (hemoptisis)."
         ],
         sources: [
-          { name: "MedlinePlus: Pleural effusion (EN)", url: "https://medlineplus.gov/pleuraleffusion.html" },
-          { name: "MedlinePlus Enciclopedia: Pleural effusion (EN)", url: "https://medlineplus.gov/ency/article/000086.htm" }
+          { name: "Clínica Universidad de Navarra: Neumotórax", url: "https://www.cun.es/enfermedades-tratamientos/enfermedades/neumotorax" }
         ]
       },
 
       "neumonia bacteriana": {
-        termInfo: "Infección pulmonar; suele requerir evaluación médica y tratamiento indicado.",
+        termInfo: "La radiografía muestra hallazgos compatibles con neumonía bacteriana. Se requiere valoración médica para confirmar diagnóstico y determinar gravedad.",
         quick: [
-          "Sugerir valoración médica si hay fiebre alta, dolor torácico o dificultad para respirar.",
-          "Recomendar reposo e hidratación; evitar tabaco/humo.",
-          "Evitar antibióticos sin receta; seguir indicación profesional."
+          "Seguir indicación médica para antibiótico (la elección depende del caso y del paciente).",
+          "En casos leves: manejo ambulatorio con seguimiento; si hay gravedad: considerar hospitalización y tratamiento IV.",
+          "Reposo, hidratación y completar el tratamiento indicado para evitar recaídas o complicaciones.",
+          "Acudir a atención médica si hay fiebre persistente, falta de aire o empeoramiento."
         ],
         redFlags: [
-          "Dificultad respiratoria, respiración rápida, labios azulados.",
-          "Confusión, somnolencia marcada, deshidratación severa.",
-          "Empeoramiento rápido o fiebre alta persistente."
+          "Tos con sangre.",
+          "Dolor torácico y fiebre con escalofríos.",
+          "Cansancio extremo, dolores musculares o cefalea intensa.",
+          "Dificultad respiratoria.",
+          "Datos de sepsis/shock (debilidad severa, confusión, presión baja)."
         ],
         sources: [
-          { name: "MedlinePlus (ES): Neumonía", url: "https://medlineplus.gov/spanish/pneumonia.html" },
-          { name: "CDC: Pneumonia (EN)", url: "https://www.cdc.gov/pneumonia/index.html" }
+          { name: "Mayo Clinic: Neumonía (diagnóstico y tratamiento)", url: "https://www.mayoclinic.org/es/diseases-conditions/pneumonia/diagnosis-treatment/drc-20354210" },
+          { name: "Clínica Universidad de Navarra: Neumonía", url: "https://www.cun.es/enfermedades-tratamientos/enfermedades/neumonia" }
         ]
       },
 
       "tuberculosis": {
-        termInfo: "Enfermedad infecciosa; requiere diagnóstico y tratamiento supervisado.",
+        termInfo: "La radiografía presenta hallazgos compatibles con un posible proceso infeccioso sugestivo de tuberculosis. Se recomienda valoración médica para confirmar.",
         quick: [
-          "Sugerir valoración médica para confirmar diagnóstico (pruebas específicas) y definir tratamiento.",
-          "Si hay tos prolongada, fiebre, sudores nocturnos o pérdida de peso, recomendar consulta pronta.",
-          "Seguir medidas de prevención y control de contagio según indicación médica."
+          "Confirmar con pruebas complementarias: tuberculina, análisis y/o estudio microbiológico de esputo según criterio médico.",
+          "Si se confirma TB activa: tratamiento con combinación de antibióticos por varios meses bajo supervisión médica.",
+          "Completar el tratamiento incluso si mejora, para evitar recaídas o resistencia.",
+          "Consulta prioritaria si hay tos persistente, fiebre, sudoración nocturna, pérdida de peso o falta de aire."
         ],
         redFlags: [
           "Tos con sangre o dificultad respiratoria importante.",
@@ -139,20 +192,19 @@
           "Empeoramiento rápido o dolor torácico fuerte."
         ],
         sources: [
-          { name: "WHO: Tuberculosis", url: "https://www.who.int/health-topics/tuberculosis" },
-          { name: "CDC: Tuberculosis", url: "https://www.cdc.gov/tb/" },
-          { name: "MedlinePlus (ES): Tuberculosis", url: "https://medlineplus.gov/spanish/tuberculosis.html" }
+          { name: "Mayo Clinic: Tuberculosis (diagnóstico y tratamiento)", url: "https://www.mayoclinic.org/es/diseases-conditions/tuberculosis/diagnosis-treatment/drc-20351256" }
         ]
       },
 
       "normal": {
-        termInfo: "El modelo no detectó un patrón fuerte de las clases entrenadas. No descarta enfermedad si hay síntomas.",
+        termInfo: "La radiografía de tórax no muestra alteraciones evidentes en los pulmones ni en la silueta cardíaca.",
         quick: [
-          "Si hay síntomas, la evaluación debe basarse en la clínica (no solo en una imagen).",
-          "Recomendar consulta si hay fiebre persistente, tos prolongada o malestar que empeora."
+          "No se identifican signos radiográficos evidentes de infección, colapso pulmonar ni agrandamiento cardíaco.",
+          "Si existen síntomas persistentes (tos, fiebre, dolor torácico o falta de aire), se recomienda valoración médica: algunas condiciones pueden no ser visibles en etapas tempranas."
         ],
         redFlags: [
-          "Dificultad respiratoria, dolor en pecho, confusión, desmayo, coloración azulada o empeoramiento rápido."
+          "Falta de aire marcada, dolor en el pecho, desmayo o confusión.",
+          "Fiebre persistente o empeoramiento rápido de síntomas."
         ],
         sources: [
           { name: "MedlinePlus (ES): Temas de salud", url: "https://medlineplus.gov/spanish/healthtopics.html" }
@@ -170,25 +222,25 @@
     if (!cfg) {
       termInfoEl.textContent = "No hay recomendación configurada para este label. Revisa coincidencia exacta del nombre.";
       quickEl.innerHTML = `<p>No configurado para: <kbd>${escapeHtml(pred.label)}</kbd></p>`;
-      flagsEl.innerHTML = `<ul style="margin:0;padding-left:18px;"><li>Si hay síntomas graves o empeoran: acudir a urgencias.</li></ul>`;
-      sourcesEl.innerHTML = `<p class="small">Agrega este label al objeto RECS en result.html.</p>`;
+      flagsEl.innerHTML = renderList(["Si hay síntomas graves o empeoran: acudir a urgencias."]);
+      sourcesEl.innerHTML = `<p class="muted small">Agrega este label al objeto RECS en result.html.</p>`;
     } else {
-      termInfoEl.textContent = cfg.termInfo;
+      termInfoEl.textContent = cfg.termInfo || "";
+      quickEl.innerHTML = renderList(cfg.quick || []);
+      flagsEl.innerHTML = renderList(cfg.redFlags || []);
+      sourcesEl.innerHTML = renderSources(cfg.sources || []);
+    }
 
-      quickEl.innerHTML =
-        `<ul style="margin:0;padding-left:18px;">` +
-        cfg.quick.map(x => `<li>${escapeHtml(x)}</li>`).join("") +
-        `</ul>`;
+    function renderList(items){
+      if (!items || !items.length) return `<p class="muted small">—</p>`;
+      return `<ul class="nice-list">` + items.map(x => `<li>${escapeHtml(x)}</li>`).join("") + `</ul>`;
+    }
 
-      flagsEl.innerHTML =
-        `<ul style="margin:0;padding-left:18px;">` +
-        cfg.redFlags.map(x => `<li>${escapeHtml(x)}</li>`).join("") +
-        `</ul>`;
-
-      sourcesEl.innerHTML =
-        `<ul style="margin:0;padding-left:18px;">` +
-        cfg.sources.map(s => `<li><a href="${s.url}" target="_blank" rel="noopener">${escapeHtml(s.name)}</a></li>`).join("") +
-        `</ul>`;
+    function renderSources(items){
+      if (!items || !items.length) return `<p class="muted small">—</p>`;
+      return `<ul class="nice-list">` + items.map(s =>
+        `<li><a class="source-link" href="${s.url}" target="_blank" rel="noopener">${escapeHtml(s.name)}</a></li>`
+      ).join("") + `</ul>`;
     }
 
     function escapeHtml(str) {
@@ -199,3 +251,4 @@
   </script>
 </body>
 </html>
+

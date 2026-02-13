@@ -453,3 +453,29 @@ Doctor Page - estilo celeste (igual que index)
   border: 1px solid rgba(11,42,58,.18);
   background: rgba(255,255,255,.78);
 }
+
+/* Listas bonitas para recomendaciones/resultados */
+.nice-list{
+  margin: 0;
+  padding-left: 18px;
+  line-height: 1.45;
+}
+.nice-list li{
+  margin: 8px 0;
+}
+.sec-title{
+  margin: 6px 0 6px;
+  font-size: 14px;
+  font-weight: 800;
+}
+.sec-body{
+  font-size: 13px;
+  opacity: .90;
+}
+.source-link{
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(11,42,58,.35);
+}
+.source-link:hover{
+  border-bottom-style: solid;
+}
